@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Controle Financeiro</title>
+    
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#00f0ff" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+            transition: all 0.15s ease;
+        }
+
+        html, body {
+            height: 100vh;
+            margin: 0;
+            padding: 12px 18px;
+            overflow: hidden;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            font-size: 15px;
+            background: radial-gradient(circle at 10% 20%, #10192d 0%, #080c16 90%);
+            color: #e0e6ed;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(18, 26, 43, 0.6);
+            backdrop-filter: blur(12px);
+            padding: 8px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin: 0;
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 20px;
+            background: linear-gradient(180deg, #00f0ff, #7000ff);
+            border-radius: 3px;
+            box-shadow: 0 0 10px #00f0ff;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        #status-sync {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #00ff88;
+            letter-spacing: 0.5px;
+        }
+
+        .selector-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .selector-wrap label {
+            font-weight: 600;
+            color: #00f0ff;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.8px;
+        }
+
+        /* 3 Colunas Principais */
+        .container {
+            display: flex;
+            gap: 14px;
+            flex: 1;
+            min-height: 0;
+            margin-bottom: 10px;
+        }
+
+        .box {
+            background: rgba(16, 24, 40, 0.65);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 16px;
+            flex: 1;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .box::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.5), transparent);
+        }
+
+        .campos-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        h2 {
+            margin: 0 0 2px 0;
+            font-size: 1.3rem;
+            color: #f3f6fa;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sub-salario {
+            color: #94a3b8;
+            margin: 0 0 8px 0;
+            font-size: 0.92rem;
+        }
+
+        .title-and-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+
+        .title-and-checkbox h2 {
+            margin: 0;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            background: rgba(8, 12, 22, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #f8fafc;
+            border-radius: 7px;
+            padding: 5px 10px;
+            font-size: 15px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        select {
+            cursor: pointer;
+            padding: 6px 12px;
+            border-color: rgba(0, 240, 255, 0.4);
+            font-size: 14.5px;
+            font-weight: 500;
+        }
+
+        select option {
+            background: #0f172a;
+            color: #fff;
+        }
+
+        select:focus, input[type="number"]:focus, input[type="text"]:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.35);
+        }
+
+        .campo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .campo label {
+            flex: 1.1;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .campo input[type="number"] {
+            flex: 1.5;
+            width: 100%;
+            text-align: right;
+            font-size: 15px;
+            padding: 4.5px 8px;
+        }
+
+        .campo input[type="checkbox"], .title-and-checkbox input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            position: relative;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        .campo input[type="checkbox"]:checked, .title-and-checkbox input[type="checkbox"]:checked {
+            background: #00ff88;
+            border-color: #00ff88;
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+        }
+
+        .campo input[type="checkbox"]:checked::after, .title-and-checkbox input[type="checkbox"]:checked::after {
+            content: '✔';
+            position: absolute;
+            color: #041009;
+            font-size: 13px;
+            font-weight: 900;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .total {
+            font-weight: 600;
+            margin: 4px 0 0 0;
+            white-space: pre-line;
+            line-height: 1.4;
+            padding: 6px 10px;
+            border-radius: 7px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        .total-saldo-destaque {
+            font-size: 1.05rem !important;
+            padding: 7px 10px;
+        }
+
+        .cofre-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(16, 24, 40, 0.7);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 10px;
+            padding: 8px 18px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .cofre-bar .info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cofre-bar .info h3 {
+            margin: 0;
+            font-size: 1.15rem;
+            color: #00f0ff;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .cofre-bar .info span {
+            color: #94a3b8;
+            font-size: 0.88rem;
+        }
+
+        .cofre-bar .input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cofre-bar .input-wrap label {
+            font-size: 0.98rem;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .cofre-bar input[type="number"] {
+            width: 160px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: 700;
+            color: #00f0ff;
+            border-color: rgba(0, 240, 255, 0.4);
+            padding: 5px 10px;
+        }
+
+        .total-geral-box {
+            background: rgba(14, 20, 36, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 12px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric .lbl {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.9px;
+            color: #94a3b8;
+            margin-bottom: 3px;
+        }
+
+        .metric .val {
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .metric-destaque .val {
+            font-size: 1.55rem;
+            color: #00f0ff;
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+        }
+
+        .negative {
+            color: #ff3366 !important;
+            text-shadow: 0 0 8px rgba(255, 51, 102, 0.4);
+        }
+
+        .positive {
+            color: #00ff88 !important;
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+        }
+
+        .pago {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.25), rgba(0, 200, 100, 0.1)) !important;
+            border-color: #00ff88 !important;
+            color: #afffd5 !important;
+            box-shadow: inset 0 0 6px rgba(0, 255, 136, 0.2);
+        }
+
+        .extra-campo input[type="checkbox"] {
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <h1>Controle Financeiro</h1>
+        <div class="header-actions">
+            <span id="status-sync">⚡ Conectando...</span>
+            <div class="selector-wrap">
+                <label for="mes">Ciclo Mensal:</label>
+                <select id="mes" onchange="carregarMes()">
+                    <!-- 2026 -->
+                    <option value="2026-01">Janeiro 2026</option>
+                    <option value="2026-02">Fevereiro 2026</option>
+                    <option value="2026-03">Março 2026</option>
+                    <option value="2026-04">Abril 2026</option>
+                    <option value="2026-05">Maio 2026</option>
+                    <option value="2026-06">Junho 2026</option>
+                    <option value="2026-07">Julho 2026</option>
+                    <option value="2026-08">Agosto 2026</option>
+                    <option value="2026-09">Setembro 2026</option>
+                    <option value="2026-10">Outubro 2026</option>
+                    <option value="2026-11">Novembro 2026</option>
+                    <option value="2026-12">Dezembro 2026</option>
+                    <!-- 2027 -->
+                    <option value="2027-01">Janeiro 2027</option>
+                    <option value="2027-02">Fevereiro 2027</option>
+                    <option value="2027-03">Março 2027</option>
+                    <option value="2027-04">Abril 2027</option>
+                    <option value="2027-05">Maio 2027</option>
+                    <option value="2027-06">Junho 2027</option>
+                    <option value="2027-07">Julho 2027</option>
+                    <option value="2027-08">Agosto 2027</option>
+                    <option value="2027-09">Setembro 2027</option>
+                    <option value="2027-10">Outubro 2027</option>
+                    <option value="2027-11">Novembro 2027</option>
+                    <option value="2027-12">Dezembro 2027</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Fernanda -->
+        <div class="box">
+            <div>
+                <h2>Fernanda</h2>
+                <div class="sub-salario">Salário: R$ 8000</div>
+                <div class="campos-wrapper">
+                    <div class="campo"><label for="f_aluguel">Aluguel:</label><input type="number" id="f_aluguel" /> <input type="checkbox" id="pago_f_aluguel" onchange="marcarPago('f_aluguel')" /></div>
+                    <div class="campo"><label for="f_fies">FIES:</label><input type="number" id="f_fies" /><input type="checkbox" id="pago_f_fies" onchange="marcarPago('f_fies')" /></div>
+                    <div class="campo"><label for="f_vivo">Vivo:</label><input type="number" id="f_vivo" /><input type="checkbox" id="pago_f_vivo" onchange="marcarPago('f_vivo')" /></div>
+                    <div class="campo"><label for="f_condominio">Condomínio:</label><input type="number" id="f_condominio" /><input type="checkbox" id="pago_f_condominio" onchange="marcarPago('f_condominio')" /></div>
+                    <div class="campo"><label for="f_luz">Luz:</label><input type="number" id="f_luz" /><input type="checkbox" id="pago_f_luz" onchange="marcarPago('f_luz')" /></div>
+                    <div class="campo extra-campo"><label for="f_extra">Extra:</label><input type="number" id="f_extra" /><input type="checkbox" id="pago_f_extra" onchange="marcarPago('f_extra')" /></div>
+                </div>
+            </div>
+            <div>
+                <p class="total" id="f_total"></p>
+                <p class="total total-saldo-destaque" id="f_saldo"></p>
+            </div>
+        </div>
+
+        <!-- Mateus -->
+        <div class="box">
+            <div>
+                <h2>Mateus</h2>
+                <div class="sub-salario">Salário: R$ 4800</div>
+                <div class="campos-wrapper">
+                    <div class="campo"><label for="m_amigo">Amigo:</label><input type="number" id="m_amigo" /><input type="checkbox" id="pago_m_amigo" onchange="marcarPago('m_amigo')" /></div>
+                    <div class="campo"><label for="m_consc">Consórcio:</label><input type="number" id="m_consc" /><input type="checkbox" id="pago_m_consc" onchange="marcarPago('m_consc')" /></div>
+                    <div class="campo"><label for="m_tim">Tim:</label><input type="number" id="m_tim" /><input type="checkbox" id="pago_m_tim" onchange="marcarPago('m_tim')" /></div>
+                    <div class="campo"><label for="m_senac">SENAC:</label><input type="number" id="m_senac" /><input type="checkbox" id="pago_m_senac" onchange="marcarPago('m_senac')" /></div>
+                    <div class="campo"><label for="m_nubank_fatura">Nubank:</label><input type="number" id="m_nubank_fatura" /><input type="checkbox" id="pago_m_nubank_fatura" onchange="marcarPago('m_nubank_fatura')" /></div>
+                    <div class="campo extra-campo"><label for="m_extra">Extra:</label><input type="number" id="m_extra" /><input type="checkbox" id="pago_m_extra" onchange="marcarPago('m_extra')" /></div>
+                </div>
+            </div>
+            <div>
+                <p class="total" id="m_total"></p>
+                <p class="total total-saldo-destaque" id="m_saldo"></p>
+            </div>
+        </div>
+
+        <!-- Cartão Verde -->
+        <div class="box">
+            <div>
+                <div class="title-and-checkbox">
+                    <h2>Cartão Verde</h2>
+                    <input type="checkbox" id="pago_cv_total" onchange="marcarCartaoVerdePago()" />
+                </div>
+                <div class="sub-salario" style="visibility: hidden;">Placeholder</div>
+                <div class="campos-wrapper">
+                    <div class="campo"><label for="fechamento">Data fechamento:</label><input type="number" id="fechamento" min="1" max="31" /></div>
+                    <div class="campo"><label for="cv_fixo">Assinaturas Fixas:</label><input type="number" id="cv_fixo" /></div>
+                    <div class="campo"><label for="cv_limite">Limite mensal:</label><input type="number" id="cv_limite" /></div>
+                    <div class="campo"><label for="cv_gasto">Uso mensal (var):</label><input type="number" id="cv_gasto" readonly /></div>
+                    <div class="campo"><label for="cv_extra">Adicionar gasto:</label><input type="number" id="cv_extra" placeholder="Digite e dê ENTER" /></div>
+                </div>
+            </div>
+            <div>
+                <p class="total total-saldo-destaque" id="cv_status"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra do Cofre -->
+    <div class="cofre-bar">
+        <div class="info">
+            <h3>Cofre</h3>
+            <span>Reserva estratégica acumulada</span>
+        </div>
+        <div class="input-wrap">
+            <label for="reserva_cofre">Saldo Cofre (R$):</label>
+            <input type="number" id="reserva_cofre" placeholder="0.00" step="any" />
+        </div>
+    </div>
+
+    <!-- Barra Inferior de Balanço e Totais -->
+    <div class="total-geral-box">
+        <div class="metric">
+            <div class="lbl">Saldos Disponíveis (Fernanda + Mateus)</div>
+            <div id="total_saldos_geral" class="val">R$ 0.00</div>
+        </div>
+        <div class="metric metric-destaque">
+            <div class="lbl">Total de Fundos (Saldos + Cofre)</div>
+            <div id="total_fundos_geral" class="val">R$ 0.00</div>
+        </div>
+    </div>
+
+    <script>
+        // COLE A SUA URL DO GOOGLE APPS SCRIPT ABAIXO ENTRE AS ASPAS:
+        const API_URL = "https://script.google.com/macros/s/AKfycbxJjbVOJFrtOvVudkyL1ErEDxseYdjPOSrDBsVRdgtHyH_cUVoF1XIdncImCuAgeEAs/exec";
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+
+        let meses = {};
+        let timerSalvar = null;
+
+        function setStatus(texto, cor) {
+            const el = document.getElementById("status-sync");
+            if (el) {
+                el.innerText = texto;
+                el.style.color = cor || "#00ff88";
+            }
+        }
+
+        // Salva na nuvem (com debounce para não sobrecarregar a cada tecla)
+        function salvarDados() {
+            // Mantém backup no cache local imediatamente
+            localStorage.setItem("meses_cache", JSON.stringify(meses));
+
+            if (!API_URL || API_URL.includes("SUA_URL")) return;
+
+            setStatus("☁️ Salvando na nuvem...", "#00f0ff");
+            clearTimeout(timerSalvar);
+
+            timerSalvar = setTimeout(() => {
+                const dadosPayload = encodeURIComponent(JSON.stringify(meses));
+                fetch(`${API_URL}?dados=${dadosPayload}`, { mode: 'no-cors' })
+                    .then(() => {
+                        setStatus("☁️ Nuvem Sincronizada", "#00ff88");
+                    })
+                    .catch(() => {
+                        setStatus("⚠️ Erro de sincronização", "#ff3366");
+                    });
+            }, 800);
+        }
+
+        // Carrega dados iniciais da nuvem Google
+        async function inicializarDadosNuvem() {
+            setStatus("☁️ Baixando dados...", "#00f0ff");
+            
+            // Usa cache local provisório enquanto carrega da nuvem
+            const cache = localStorage.getItem("meses_cache");
+            if (cache) {
+                try { meses = JSON.parse(cache); } catch(e){}
+            }
+
+            if (API_URL && !API_URL.includes("SUA_URL")) {
+                try {
+                    const res = await fetch(API_URL);
+                    const cloudData = await res.json();
+                    if (cloudData && Object.keys(cloudData).length > 0) {
+                        meses = cloudData;
+                        localStorage.setItem("meses_cache", JSON.stringify(meses));
+                    }
+                    setStatus("☁️ Nuvem Conectada", "#00ff88");
+                } catch(err) {
+                    setStatus("☁️ Modo Offline (Cache Local)", "#ffaa00");
+                }
+            } else {
+                setStatus("⚠️ Configure a URL do Apps Script", "#ffaa00");
+            }
+
+            carregarMes();
+        }
+
+        function somarDespesas(prefixo) {
+            let total = 0;
+            const mes = document.getElementById("mes").value;
+            const mesData = meses[mes];
+            if (!mesData) return 0;
+            
+            const ids = Object.keys(mesData).filter(id => 
+                id.startsWith(prefixo) && id !== `${prefixo}extra` && id !== 'pago'
+            );
+            
+            for (const id of ids) {
+                if (document.getElementById(id)) total += Number(document.getElementById(id).value) || 0;
+            }
+            return total;
+        }
+
+        function somarPagos(prefixo) {
+            let total = 0;
+            const mes = document.getElementById("mes").value;
+            const mesData = meses[mes];
+            if (!mesData || !mesData.pago) return 0;
+            
+            const campos = Array.from(document.querySelectorAll(`input[id^="${prefixo}"]:not([type="checkbox"])`))
+                .map(input => input.id);
+
+            for (const id of campos) {
+                if (mesData.pago[id]) total += Number(document.getElementById(id).value) || 0;
+            }
+            return total;
+        }
+
+        function carregarMes() {
+            const mes = document.getElementById("mes").value;
+            const camposDefault = {
+                f_aluguel: 1607, f_fies: 97, f_vivo: 45, f_condominio: 600, f_luz: 279, f_extra: 200,
+                m_amigo: 105, m_consc: 700, m_tim: 72, m_senac: 290, m_nubank_fatura: 0, m_extra: 350,
+                fechamento: 22, cv_fixo: 600, cv_limite: 3000, cv_gasto: 0,
+                reserva_cofre: 0
+            };
+
+            if (!meses[mes]) {
+                meses[mes] = { ...camposDefault, pago: {} };
+            } else {
+                meses[mes] = { ...camposDefault, ...meses[mes], pago: meses[mes].pago || {} };
+            }
+
+            for (const id in camposDefault) {
+                if (document.getElementById(id)) {
+                    document.getElementById(id).value = meses[mes][id] !== undefined ? meses[mes][id] : camposDefault[id];
+                }
+            }
+
+            Object.keys(camposDefault).forEach(id => {
+                const cb = document.getElementById("pago_" + id);
+                const campo = document.getElementById(id);
+                if (cb && campo) {
+                    const isPago = !!(meses[mes].pago && meses[mes].pago[id]);
+                    cb.checked = isPago;
+                    campo.classList.toggle("pago", isPago);
+                }
+            });
+            
+            const pagoVerde = meses[mes].pago['cv_total'];
+            document.getElementById('pago_cv_total').checked = !!pagoVerde;
+            ['fechamento', 'cv_fixo', 'cv_limite', 'cv_gasto', 'cv_extra'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.toggle('pago', !!pagoVerde);
+            });
+
+            document.getElementById("cv_extra").value = "";
+            atualizarTotais();
+        }
+
+        function marcarPago(id) {
+            const mes = document.getElementById("mes").value;
+            const cb = document.getElementById("pago_" + id);
+            if (!meses[mes].pago) meses[mes].pago = {};
+            meses[mes].pago[id] = cb.checked;
+            document.getElementById(id).classList.toggle("pago", cb.checked);
+            salvarDados();
+            atualizarTotais();
+        }
+
+        function marcarCartaoVerdePago() {
+            const mes = document.getElementById("mes").value;
+            const checked = document.getElementById("pago_cv_total").checked;
+            if (!meses[mes].pago) meses[mes].pago = {};
+            meses[mes].pago['cv_total'] = checked;
+            ['fechamento', 'cv_fixo', 'cv_limite', 'cv_gasto', 'cv_extra'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.toggle('pago', checked);
+            });
+            salvarDados();
+            atualizarTotais();
+        }
+
+        function replicarParaMesesFuturos(idCampo, valorNovo) {
+            const selectMes = document.getElementById("mes");
+            const mesSelecionado = selectMes.value;
+            
+            const todosMeses = Array.from(selectMes.options).map(opt => opt.value);
+            const indexAtual = todosMeses.indexOf(mesSelecionado);
+
+            for (let i = indexAtual + 1; i < todosMeses.length; i++) {
+                const mesFuturo = todosMeses[i];
+                if (!meses[mesFuturo]) meses[mesFuturo] = { pago: {} };
+                meses[mesFuturo][idCampo] = valorNovo;
+            }
+        }
+
+        function atualizarTotais() {
+            const mes = document.getElementById("mes").value;
+            const get = id => Number(document.getElementById(id)?.value) || 0;
+
+            const fixo = get("cv_fixo");
+            const variavel = get("cv_gasto");
+            const gastoFinal = fixo + variavel;
+            const cofreVal = get("reserva_cofre");
+
+            meses[mes] = {
+                ...meses[mes],
+                f_aluguel: get("f_aluguel"), f_fies: get("f_fies"), f_vivo: get("f_vivo"), f_condominio: get("f_condominio"), f_luz: get("f_luz"), f_extra: get("f_extra"),
+                m_amigo: get("m_amigo"), m_consc: get("m_consc"), m_tim: get("m_tim"), m_senac: get("m_senac"), m_nubank_fatura: get("m_nubank_fatura"), m_extra: get("m_extra"),
+                fechamento: get("fechamento"), cv_fixo: fixo, cv_limite: get("cv_limite"), cv_gasto: variavel,
+                reserva_cofre: cofreVal
+            };
+
+            // Fernanda - R$ 8000
+            const fTotalD = somarDespesas('f_');
+            const fTotalP = somarPagos('f_');
+            const fSaldo = 8000 + get("f_extra") - fTotalP;
+            document.getElementById("f_total").innerText = `Total despesas: R$ ${fTotalD.toFixed(2)}\nTotal pagos: R$ ${fTotalP.toFixed(2)}`;
+            document.getElementById("f_saldo").innerText = `Saldo disponível: R$ ${fSaldo.toFixed(2)}`;
+            document.getElementById("f_saldo").className = "total total-saldo-destaque " + (fSaldo < 0 ? "negative" : "positive");
+
+            // Mateus - R$ 4800
+            const mTotalD = somarDespesas('m_');
+            const mTotalP = somarPagos('m_');
+            const isVerdePago = document.getElementById('pago_cv_total').checked;
+            const mGeralD = mTotalD + gastoFinal;
+            const mGeralP = mTotalP + (isVerdePago ? gastoFinal : 0);
+            const mSaldo = 4800 + get("m_extra") - mGeralP;
+            document.getElementById("m_total").innerText = `Total despesas: R$ ${mGeralD.toFixed(2)}\nTotal pagos: R$ ${mGeralP.toFixed(2)}`;
+            document.getElementById("m_saldo").innerText = `Saldo disponível: R$ ${mSaldo.toFixed(2)}`;
+            document.getElementById("m_saldo").className = "total total-saldo-destaque " + (mSaldo < 0 ? "negative" : "positive");
+
+            const limite = get("cv_limite");
+            const sobra = limite - gastoFinal;
+            document.getElementById("cv_status").innerText = `Gasto final: R$ ${gastoFinal.toFixed(2)}\nSaldo até dia ${get("fechamento")}: R$ ${sobra.toFixed(2)}`;
+
+            // Total Geral Saldos
+            const geralSaldos = fSaldo + mSaldo;
+            const elTotalGeral = document.getElementById("total_saldos_geral");
+            elTotalGeral.innerText = `R$ ${geralSaldos.toFixed(2)}`;
+            elTotalGeral.className = "val " + (geralSaldos < 0 ? "negative" : "positive");
+
+            // Total de Fundos (Saldos + Cofre)
+            const totalFundos = geralSaldos + cofreVal;
+            const elTotalFundos = document.getElementById("total_fundos_geral");
+            elTotalFundos.innerText = `R$ ${totalFundos.toFixed(2)}`;
+            elTotalFundos.className = "val " + (totalFundos < 0 ? "negative" : "positive");
+        }
+
+        document.querySelectorAll("input[type=number]:not(#cv_extra)").forEach(input => {
+            input.addEventListener("input", function() {
+                atualizarTotais();
+                const valorDigitado = Number(this.value) || 0;
+                replicarParaMesesFuturos(this.id, valorDigitado);
+                salvarDados();
+            });
+        });
+
+        document.getElementById("cv_extra").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                const val = parseFloat(this.value);
+                if (!isNaN(val)) {
+                    const el = document.getElementById("cv_gasto");
+                    el.value = (parseFloat(el.value) + val).toFixed(2);
+                    this.value = "";
+                    atualizarTotais();
+                    replicarParaMesesFuturos("cv_gasto", parseFloat(el.value));
+                    salvarDados();
+                }
+            }
+        });
+
+        // Seleção do mês inicial (regra dia 6)
+        const dataReferencia = new Date();
+        if (dataReferencia.getDate() >= 6) {
+            dataReferencia.setMonth(dataReferencia.getMonth() + 1);
+        }
+
+        const ano = dataReferencia.getFullYear();
+        const mesRefNum = String(dataReferencia.getMonth() + 1).padStart(2, '0');
+        const mesFormatado = `${ano}-${mesRefNum}`;
+
+        const selectMes = document.getElementById("mes");
+        const existeOpcao = Array.from(selectMes.options).some(opt => opt.value === mesFormatado);
+
+        if (existeOpcao) {
+            selectMes.value = mesFormatado;
+        }
+
+        // Dispara o carregamento dos dados da nuvem Google
+        inicializarDadosNuvem();
+    </script>
+</body>
+</html>

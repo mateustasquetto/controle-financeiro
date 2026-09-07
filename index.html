@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Controle Financeiro</title>
     
     <link rel="manifest" href="manifest.json" />
@@ -15,6 +15,7 @@
             transition: all 0.15s ease;
         }
 
+        /* CONFIGURAÇÃO BASE (DESKTOP - 1 PÁGINA FIXA) */
         html, body {
             height: 100vh;
             margin: 0;
@@ -208,6 +209,7 @@
             padding: 4.5px 8px;
         }
 
+        /* Checkbox Tech */
         .campo input[type="checkbox"], .title-and-checkbox input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
@@ -256,6 +258,7 @@
             padding: 7px 10px;
         }
 
+        /* Barra do Cofre */
         .cofre-bar {
             display: flex;
             align-items: center;
@@ -309,6 +312,7 @@
             padding: 5px 10px;
         }
 
+        /* Barra Inferior de Balanço e Totais */
         .total-geral-box {
             background: rgba(14, 20, 36, 0.85);
             backdrop-filter: blur(16px);
@@ -364,6 +368,99 @@
 
         .extra-campo input[type="checkbox"] {
             visibility: hidden;
+        }
+
+        /* ADAPTAÇÃO TOTAL PARA CELULAR / TABLET */
+        @media (max-width: 900px) {
+            html, body {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto; /* Permite rolar suavemente na vertical */
+                padding: 10px;
+                justify-content: flex-start;
+                gap: 12px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .selector-wrap {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .selector-wrap select {
+                flex: 1;
+            }
+
+            #status-sync {
+                text-align: center;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                flex-direction: column; /* As 3 caixas ficam uma abaixo da outra */
+                gap: 14px;
+                flex: none;
+            }
+
+            .box {
+                flex: none;
+                width: 100%;
+                gap: 12px;
+            }
+
+            .campo {
+                margin: 4px 0;
+            }
+
+            .campo input[type="number"] {
+                font-size: 16px; /* Evita que o iOS/Android dê zoom automático */
+                padding: 8px;
+            }
+
+            .campo input[type="checkbox"], .title-and-checkbox input[type="checkbox"] {
+                width: 26px;
+                height: 26px; /* Área de clique bem maior para o dedo */
+            }
+
+            .cofre-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .cofre-bar .info {
+                justify-content: space-between;
+            }
+
+            .cofre-bar .input-wrap {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .cofre-bar input[type="number"] {
+                flex: 1;
+                font-size: 16px;
+                padding: 8px;
+            }
+
+            .total-geral-box {
+                flex-direction: column;
+                gap: 14px;
+                padding: 14px;
+            }
         }
     </style>
 </head>
@@ -495,7 +592,6 @@
     </div>
 
     <script>
-        // COLE A SUA URL DO GOOGLE APPS SCRIPT ABAIXO ENTRE AS ASPAS:
         const API_URL = "https://script.google.com/macros/s/AKfycbxJjbVOJFrtOvVudkyL1ErEDxseYdjPOSrDBsVRdgtHyH_cUVoF1XIdncImCuAgeEAs/exec";
 
         if ('serviceWorker' in navigator) {
@@ -513,9 +609,7 @@
             }
         }
 
-        // Salva na nuvem (com debounce para não sobrecarregar a cada tecla)
         function salvarDados() {
-            // Mantém backup no cache local imediatamente
             localStorage.setItem("meses_cache", JSON.stringify(meses));
 
             if (!API_URL || API_URL.includes("SUA_URL")) return;
@@ -535,11 +629,9 @@
             }, 800);
         }
 
-        // Carrega dados iniciais da nuvem Google
         async function inicializarDadosNuvem() {
             setStatus("☁️ Baixando dados...", "#00f0ff");
             
-            // Usa cache local provisório enquanto carrega da nuvem
             const cache = localStorage.getItem("meses_cache");
             if (cache) {
                 try { meses = JSON.parse(cache); } catch(e){}

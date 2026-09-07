@@ -1,82 +1,65 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <!-- Fundo externo suave e brilhante -->
-    <radialGradient id="fundoApp" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#143a2a"/>
-      <stop offset="100%" stop-color="#071b12"/>
-    </radialGradient>
-
-    <!-- Gradiente do Papel-Moeda (Verde Cédula Vibrante) -->
-    <linearGradient id="corCedula" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Gradiente da Borda / Papel Externo da Cédula -->
+    <linearGradient id="bordaCedula" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#4ade80"/>
       <stop offset="50%" stop-color="#22c55e"/>
       <stop offset="100%" stop-color="#15803d"/>
     </linearGradient>
 
-    <!-- Gradiente Interno da Cédula -->
-    <linearGradient id="corMiolo" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ecfdf5"/>
+    <!-- Gradiente Interno Claro da Nota -->
+    <linearGradient id="mioloCedula" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0fdf4"/>
       <stop offset="100%" stop-color="#bbf7d0"/>
     </linearGradient>
 
-    <!-- Gradiente Dourado / Ciano para Detalhes Tech -->
-    <linearGradient id="brilhoDolar" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00f0ff"/>
-      <stop offset="100%" stop-color="#10b981"/>
-    </linearGradient>
-
-    <!-- Sombra para dar profundidade de ícone de app -->
-    <filter id="sombraCedula" x="-10%" y="-10%" width="130%" height="130%">
-      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000000" flood-opacity="0.6"/>
+    <!-- Sombra suave projetada -->
+    <filter id="sombra" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000000" flood-opacity="0.35"/>
     </filter>
   </defs>
 
-  <!-- Fundo do Card/Ícone (compatível com Android/iOS/Windows) -->
-  <rect width="512" height="512" rx="115" fill="url(#fundoApp)"/>
-  <rect width="504" height="504" x="4" y="4" rx="111" fill="none" stroke="#22c55e" stroke-width="3" stroke-opacity="0.3"/>
+  <!-- Grupo centralizado da Cédula com leve rotação para preencher melhor o ícone -->
+  <g transform="rotate(-8 256 256)" filter="url(#sombra)">
+    <!-- Corpo da Cédula -->
+    <rect x="26" y="126" width="460" height="260" rx="24" fill="url(#bordaCedula)" stroke="#86efac" stroke-width="4"/>
 
-  <!-- GRUPO DA CÉDULA DE DÓLAR -->
-  <g filter="url(#sombraCedula)">
-    <!-- Corpo Principal da Cédula -->
-    <rect x="46" y="146" width="420" height="220" rx="20" fill="url(#corCedula)" stroke="#86efac" stroke-width="4"/>
+    <!-- Moldura Interna -->
+    <rect x="44" y="144" width="424" height="224" rx="16" fill="url(#mioloCedula)" stroke="#166534" stroke-width="3.5"/>
+    <rect x="54" y="154" width="404" height="204" rx="12" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="8,5"/>
 
-    <!-- Moldura Interna Clássica de Papel-Moeda -->
-    <rect x="62" y="162" width="388" height="188" rx="14" fill="url(#corMiolo)" stroke="#15803d" stroke-width="3"/>
-    <rect x="70" y="170" width="372" height="172" rx="10" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <!-- Numerais dos 4 Cantos -->
+    <circle cx="82" cy="180" r="16" fill="#22c55e" opacity="0.25"/>
+    <text x="82" y="187" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
 
-    <!-- Círculos nos 4 Cantos (Estilo Nota de Dólar) -->
-    <circle cx="92" cy="192" r="14" fill="#22c55e" opacity="0.3"/>
-    <text x="92" y="198" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
+    <circle cx="430" cy="180" r="16" fill="#22c55e" opacity="0.25"/>
+    <text x="430" y="187" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
 
-    <circle cx="420" cy="192" r="14" fill="#22c55e" opacity="0.3"/>
-    <text x="420" y="198" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
+    <circle cx="82" cy="332" r="16" fill="#22c55e" opacity="0.25"/>
+    <text x="82" y="339" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
 
-    <circle cx="92" cy="320" r="14" fill="#22c55e" opacity="0.3"/>
-    <text x="92" y="326" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
+    <circle cx="430" cy="332" r="16" fill="#22c55e" opacity="0.25"/>
+    <text x="430" y="339" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
 
-    <circle cx="420" cy="320" r="14" fill="#22c55e" opacity="0.3"/>
-    <text x="420" y="326" font-family="'Segoe UI', Arial, sans-serif" font-size="16" font-weight="900" fill="#14532d" text-anchor="middle">1</text>
+    <!-- Detalhes de Gravura Laterais -->
+    <path d="M 125 210 Q 145 256 125 302" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+    <path d="M 387 210 Q 367 256 387 302" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
 
-    <!-- Medalhão / Brasão Central -->
-    <ellipse cx="256" cy="256" rx="72" ry="76" fill="#dcfce7" stroke="#15803d" stroke-width="4"/>
-    <ellipse cx="256" cy="256" rx="64" ry="68" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,3"/>
+    <!-- Medalhão Central -->
+    <ellipse cx="256" cy="256" rx="84" ry="88" fill="#dcfce7" stroke="#166534" stroke-width="4.5"/>
+    <ellipse cx="256" cy="256" rx="74" ry="78" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-dasharray="5,4"/>
 
-    <!-- Símbolo do Cifrão ($) no Centro -->
-    <!-- Hastes Verticais -->
-    <line x1="256" y1="205" x2="256" y2="307" stroke="#15803d" stroke-width="8" stroke-linecap="round"/>
-    
-    <!-- Glifo $ em destaque -->
-    <text x="256" y="291" 
+    <!-- Traço Vertical do Cifrão -->
+    <line x1="256" y1="195" x2="256" y2="317" stroke="#14532d" stroke-width="10" stroke-linecap="round"/>
+
+    <!-- Símbolo $ -->
+    <text x="256" y="297" 
           font-family="'Segoe UI', Arial, sans-serif" 
-          font-size="105" 
+          font-size="124" 
           font-weight="900" 
           fill="#14532d" 
           text-anchor="middle">
       $
     </text>
-
-    <!-- Faixas e Selos Decorativos Laterais da Nota -->
-    <path d="M 140 230 Q 155 256 140 282" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-    <path d="M 372 230 Q 357 256 372 282" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
   </g>
 </svg>

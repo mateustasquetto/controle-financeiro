@@ -836,17 +836,23 @@
             });
         });
 
-        document.getElementById("cv_extra").addEventListener("keypress", function (e) {
+        function adicionarGastoVerde() {
+            const inputExtra = document.getElementById("cv_extra");
+            const val = parseFloat(inputExtra.value);
+            if (!isNaN(val) && val > 0) {
+                const el = document.getElementById("cv_gasto");
+                el.value = (parseFloat(el.value || 0) + val).toFixed(2);
+                inputExtra.value = "";
+                atualizarTotais();
+                replicarParaMesesFuturos("cv_gasto", parseFloat(el.value));
+                salvarDados();
+            }
+        }
+
+        document.getElementById("cv_extra").addEventListener("keydown", function (e) {
             if (e.key === "Enter") {
-                const val = parseFloat(this.value);
-                if (!isNaN(val)) {
-                    const el = document.getElementById("cv_gasto");
-                    el.value = (parseFloat(el.value) + val).toFixed(2);
-                    this.value = "";
-                    atualizarTotais();
-                    replicarParaMesesFuturos("cv_gasto", parseFloat(el.value));
-                    salvarDados();
-                }
+                e.preventDefault();
+                adicionarGastoVerde();
             }
         });
 
